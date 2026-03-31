@@ -1,0 +1,20 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "description": "Netresearch org-wide Renovate defaults",
+  "extends": [
+    "config:recommended"
+  ],
+  "stabilityDays": 3,
+  "internalChecksFilter": "strict",
+  "vulnerabilityAlerts": {
+    "enabled": true,
+    "labels": ["security"]
+  },
+  "packageRules": [
+    {
+      "description": "Deny-list compromised package versions (supply chain attacks)",
+      "matchPackageNames": ["axios"],
+      "allowedVersions": "!=1.14.1, !=0.30.4"
+    }
+  ]
+}
