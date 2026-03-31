@@ -8,13 +8,15 @@
   "internalChecksFilter": "strict",
   "vulnerabilityAlerts": {
     "enabled": true,
-    "labels": ["security"]
+    "labels": [
+      "security"
+    ]
   },
   "packageRules": [
     {
-      "description": "Deny-list compromised package versions (supply chain attacks)",
+      "description": "Deny-list compromised axios versions (supply chain attack 2026-03-31)",
       "matchPackageNames": ["axios"],
-      "allowedVersions": "!=1.14.1, !=0.30.4"
+      "allowedVersions": "!/^(1\\.14\\.1|0\\.30\\.4)$/"
     }
   ]
 }
