@@ -28,25 +28,18 @@ This replaces `"config:recommended"` (which is already included in this preset).
 Org policy (see the [SHA-Pinning Policy ADR](https://github.com/netresearch/.github/blob/main/docs/design/sha-pinning-policy.md)):
 
 - **Third-party actions** are pinned to a full commit SHA.
-- **Org-owned resources** (`netresearch/*` actions and reusable workflows) are referenced by branch (`@main`), never SHA-pinned, so first-party fixes reach every consumer without a digest-bump PR per repo.
+- **Org-owned resources** (`netresearch/**` actions and reusable workflows) are referenced by branch (`@main`), never SHA-pinned, so first-party fixes reach every consumer without a digest-bump PR per repo.
 
-This preset does not pin by default. A repo that wants Renovate to maintain third-party SHA pins opts into `helpers:pinGitHubActionDigests`. That preset pins **all** actions, so the repo **must** re-exempt `netresearch/**` in its **own** `packageRules` — Renovate applies the last matching rule, and the opt-in preset is extended after this shared config, so the exemption here alone would be overridden:
+The default preset does not pin. A repo that wants Renovate to maintain third-party SHA pins extends the `:pinning` sub-preset, which bundles `helpers:pinGitHubActionDigests` with the `netresearch/**` exemption already applied last (so the exemption always wins):
 
 ```json
 {
-  "extends": ["github>netresearch/renovate-config", "helpers:pinGitHubActionDigests"],
-  "packageRules": [
-    {
-      "description": "Do not pin org-internal reusable workflows (use @main)",
-      "matchManagers": ["github-actions"],
-      "matchPackageNames": ["netresearch/**"],
-      "pinDigests": false
-    }
-  ]
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["github>netresearch/renovate-config:pinning"]
 }
 ```
 
-Reference implementation: [`netresearch/pagerangers-skill`](https://github.com/netresearch/pagerangers-skill/blob/main/renovate.json).
+Do **not** add `helpers:pinGitHubActionDigests` directly — it pins org-owned resources too. Use the `:pinning` sub-preset so the exemption cannot be omitted.
 
 ## Adding a deny-listed version
 

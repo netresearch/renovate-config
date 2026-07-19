@@ -1,0 +1,16 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "description": "Netresearch defaults + SHA-pin third-party GitHub Actions, never org-owned (netresearch/**). See the SHA-pinning-policy ADR in netresearch/.github.",
+  "extends": [
+    "github>netresearch/renovate-config",
+    "helpers:pinGitHubActionDigests"
+  ],
+  "packageRules": [
+    {
+      "description": "Org-owned reusable workflows/actions track @main and are never SHA-pinned. This rule is applied after helpers:pinGitHubActionDigests inside this preset, so it wins (Renovate applies the last matching rule).",
+      "matchManagers": ["github-actions"],
+      "matchPackageNames": ["netresearch/**"],
+      "pinDigests": false
+    }
+  ]
+}
