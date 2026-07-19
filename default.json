@@ -17,6 +17,12 @@
       "description": "Deny-list compromised axios versions (supply chain attack 2026-03-31)",
       "matchPackageNames": ["axios"],
       "allowedVersions": "!/^(1\\.14\\.1|0\\.30\\.4)$/"
+    },
+    {
+      "description": "Org-owned resources are ref-pinned (@main), never SHA-pinned. A repo that opts into helpers:pinGitHubActionDigests MUST also carry this rule in its own packageRules (last-match-wins) — see the SHA-pinning-policy ADR in netresearch/.github.",
+      "matchManagers": ["github-actions"],
+      "matchPackageNames": ["netresearch/**"],
+      "pinDigests": false
     }
   ]
 }
