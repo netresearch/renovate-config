@@ -23,6 +23,24 @@ In each repository's `renovate.json`, replace the default preset:
 
 This replaces `"config:recommended"` (which is already included in this preset).
 
+## GitHub Actions pinning
+
+Org policy (see the [SHA-Pinning Policy ADR](https://github.com/netresearch/.github/blob/main/docs/design/sha-pinning-policy.md)):
+
+- **Third-party actions** are pinned to a full commit SHA.
+- **Org-owned resources** (`netresearch/**` actions and reusable workflows) are referenced by branch (`@main`), never SHA-pinned, so first-party fixes reach every consumer without a digest-bump PR per repo.
+
+The default preset does not pin. A repo that wants Renovate to maintain third-party SHA pins extends the `:pinning` sub-preset, which bundles `helpers:pinGitHubActionDigests` with the `netresearch/**` exemption already applied last (so the exemption always wins):
+
+```json
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["github>netresearch/renovate-config:pinning"]
+}
+```
+
+Do **not** add `helpers:pinGitHubActionDigests` directly — it pins org-owned resources too. Use the `:pinning` sub-preset so the exemption cannot be omitted.
+
 ## Adding a deny-listed version
 
 When a supply chain attack is discovered in a package version:
