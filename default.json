@@ -6,6 +6,7 @@
   ],
   "stabilityDays": 3,
   "internalChecksFilter": "strict",
+  "platformCommit": "enabled",
   "vulnerabilityAlerts": {
     "enabled": true,
     "labels": [
