@@ -1,0 +1,77 @@
+# Validates this repository's Renovate presets with Renovate's own validator.
+#
+# `default.json` and `pinning.json` are consumed org-wide via
+# `extends: ["github>netresearch/renovate-config"]`. A typo here reaches every
+# consuming repository on its next Renovate run, with nothing in between to
+# catch it — Renovate resolves the preset at runtime and simply errors out per
+# repo. This job is that missing gate: it fails on unparseable JSON, on an
+# unknown configuration option and on an option with the wrong type.
+#
+# SECURITY: pinned action SHAs, harden-runner, least-privilege permissions,
+# `persist-credentials: false` on checkout (this job never pushes).
+
+name: Validate Renovate Config
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+permissions: {}
+
+jobs:
+  renovate-config-validator:
+    name: renovate-config-validator
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@bf7454d06d71f1098171f2acdf0cd4708d7b5920 # v2.20.0
+        with:
+          egress-policy: audit
+
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+
+      # The runner image's DEFAULT Node.js is 22 (`node.default` in
+      # actions/runner-images toolset-2404.json), while renovate 44.x declares
+      # `engines.node: ^24.11.0`. npm only warns on an engine mismatch instead
+      # of refusing to run, so a bare `npx` would silently execute the
+      # validator on an unsupported runtime. Pin the runtime instead.
+      - name: Set up Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: "24"
+
+      - name: Validate presets
+        env:
+          # Pinned deliberately, NOT floating on `latest`. A bare
+          # `npx --package renovate ...` resolves through the npx cache and can
+          # land on a years-old release: 37.440.7 rejects `platformCommit:
+          # "enabled"` with `should be boolean`, because that option only became
+          # the string enum `auto | disabled | enabled` later. The preset is
+          # correct and the failure would be a false one, so the validator's
+          # version is part of the gate's definition. Bump this line together
+          # with any preset option that needs a newer schema.
+          RENOVATE_VERSION: "44.17.2"
+        # `--no-global`: when config files are passed as arguments, the
+        # validator treats them as global self-hosted configuration by default.
+        # These two files are repo-level shared presets, so they must be
+        # validated as repo config.
+        #
+        # `--strict` is deliberately NOT set yet: it also fails on a needed
+        # config migration, and `default.json` still uses the pre-migration
+        # `stabilityDays` spelling of `minimumReleaseAge`. Renaming that option
+        # changes the org-wide preset and belongs in its own change; add
+        # `--strict` here once it has landed.
+        run: >-
+          npx --yes --package "renovate@${RENOVATE_VERSION}"
+          renovate-config-validator --no-global default.json pinning.json
