@@ -20,14 +20,14 @@
       "allowedVersions": "!/^(1\\.14\\.1|0\\.30\\.4)$/"
     },
     {
-      "description": "Automerge low-risk updates. Majors are opened as usual and left for a human. stabilityDays and internalChecksFilter above still apply, so nothing merges before it has aged and its checks are green.",
-      "matchUpdateTypes": ["patch", "minor", "pin", "digest"],
+      "description": "Automerge everything that does not change what we depend on. lockFileMaintenance only refreshes transitive pins inside the existing constraints, and a rollback returns to a version that already ran here, usually because the newer one was withdrawn - holding either back helps nobody. stabilityDays and internalChecksFilter above still apply, so nothing merges before it has aged and its checks are green.",
+      "matchUpdateTypes": ["patch", "minor", "pin", "pinDigest", "digest", "bump", "lockFileMaintenance", "rollback"],
       "automerge": true
     },
     {
-      "description": "Mark majors so machinery downstream can tell them apart. The rule above already withholds automerge from them, but that is a decision only Renovate knows about: nothing on the pull request says which update type it carries, and the auto-merge workflow in netresearch/.github consequently merged majors too, overriding this policy. The label makes the distinction visible to anything that reads the pull request.",
-      "matchUpdateTypes": ["major"],
-      "addLabels": ["deps-major"]
+      "description": "Mark what a human has to look at, so machinery downstream can tell it apart. A major can break callers; a replacement swaps the dependency for a differently named successor, so the identity of what we depend on changes. Neither is covered by the automerge rule above, but that is a decision only Renovate knows about: nothing on the pull request says which update type it carries, and the auto-merge workflow in netresearch/.github consequently merged them anyway, overriding this policy. The label makes the distinction visible to anything that reads the pull request.",
+      "matchUpdateTypes": ["major", "replacement"],
+      "addLabels": ["deps-no-automerge"]
     }
   ]
 }
