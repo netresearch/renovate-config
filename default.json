@@ -7,6 +7,10 @@
   "stabilityDays": 3,
   "internalChecksFilter": "strict",
   "platformCommit": "enabled",
+  "pre-commit": {
+    "description": "Renovate leaves the pre-commit manager disabled by default, so a repository that pins its hooks by rev gets no updates for them at all. Six skill repositories were found sitting on skill-repo-skill v1.22.0 while the fleet ran v1.37.0, still enforcing a SKILL.md word cap the fleet had replaced with a body-line cap in August 2026.",
+    "enabled": true
+  },
   "vulnerabilityAlerts": {
     "enabled": true,
     "labels": [
