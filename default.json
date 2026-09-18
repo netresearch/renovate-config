@@ -32,6 +32,12 @@
       "description": "Mark what a human has to look at, so machinery downstream can tell it apart. A major can break callers; a replacement swaps the dependency for a differently named successor, so the identity of what we depend on changes. Neither is covered by the automerge rule above, but that is a decision only Renovate knows about: nothing on the pull request says which update type it carries, and the auto-merge workflow in netresearch/.github consequently merged them anyway, overriding this policy. The label makes the distinction visible to anything that reads the pull request.",
       "matchUpdateTypes": ["major", "replacement"],
       "addLabels": ["deps-no-automerge"]
+    },
+    {
+      "description": "A TYPO3 major is a framework-support decision, not an update decision. The constraint in composer.json states which core versions an extension is built and tested against, so widening it is a release-planning act that needs a CI matrix cell, a version sweep across ext_emconf.php, guides.xml and the documentation, and someone who owns the outcome. Renovate splits that one decision into one pull request per typo3/cms-* package - t3x-contexts_geolocation got four on 2026-09-18, each mergeable on its own, and merging any of them would have claimed v14 support nobody decided on. It also gets it wrong inside a major that IS supported: t3x-nr-passkeys-be#145 proposed adding || ^14.0 next to an existing ^14.3, lowering the floor to a version that was never built against. The update stays visible on the dependency dashboard and can be started from there once the support decision has been made. vulnerabilityAlerts above uses force and overrides this, and patches and minors inside the supported majors are untouched.",
+      "matchPackageNames": ["typo3/cms-**", "typo3/testing-framework"],
+      "matchUpdateTypes": ["major"],
+      "dependencyDashboardApproval": true
     }
   ]
 }
