@@ -8,6 +8,7 @@ Org-wide Renovate shared configuration preset for Netresearch.
 - **Vulnerability alerts**: Renovate will create PRs for known vulnerabilities and label them with `security` for easy triage.
 - **Deny-listed versions**: Known compromised package versions are blocked via `allowedVersions` rules, preventing Renovate from ever proposing an update to those versions.
 - **TYPO3 majors need approval**: A major update to a `typo3/cms-*` package or to `typo3/testing-framework` opens no pull request. It is listed on the repository's dependency dashboard and starts only when someone ticks it there, because widening the supported core range is a framework-support decision rather than a dependency update. Patches and minors inside the supported majors, and vulnerability alerts, are unaffected.
+- **PHPUnit majors need approval**: A major update to `phpunit/phpunit` is gated the same way, because the framework decides which PHPUnit can run — in a TYPO3 extension `typo3/testing-framework` pins it, so a PHPUnit major is part of the same support decision as the core range.
 
 ## Usage
 

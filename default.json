@@ -38,6 +38,12 @@
       "matchPackageNames": ["typo3/cms-**", "typo3/testing-framework"],
       "matchUpdateTypes": ["major"],
       "dependencyDashboardApproval": true
+    },
+    {
+      "description": "A PHPUnit major follows the framework, not the code. In a TYPO3 extension typo3/testing-framework decides which PHPUnit runs: 8.x accepts ^10.1 || ^11.0 and serves TYPO3 12/13, 9.5 and later add ^13.0.2 but serve only TYPO3 13/14. t3x-contexts_wurfl#59 proposed adding || ^13.0 to an extension that still claims TYPO3 12, where no installable testing-framework accepts PHPUnit 13. So the PHPUnit major is decided together with the supported core range, through the rule above. The same holds for other framework projects, where the framework's test suite pins PHPUnit. vulnerabilityAlerts above uses force and overrides this.",
+      "matchPackageNames": ["phpunit/phpunit"],
+      "matchUpdateTypes": ["major"],
+      "dependencyDashboardApproval": true
     }
   ]
 }
