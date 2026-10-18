@@ -11,6 +11,12 @@
     "description": "Renovate leaves the pre-commit manager disabled by default, so a repository that pins its hooks by rev gets no updates for them at all. Six skill repositories were found sitting on skill-repo-skill v1.22.0 while the fleet ran v1.37.0, still enforcing a SKILL.md word cap the fleet had replaced with a body-line cap in August 2026.",
     "enabled": true
   },
+  "gomod": {
+    "description": "Renovate runs go mod tidy only when postUpdateOptions asks for it, so a Go module update leaves the previous version's checksums in go.sum. A repository whose pre-commit check runs go mod tidy then refuses every commit until someone tidies by hand: in netresearch/ofelia that cleanup was needed three times, and open Renovate pull requests in ldap-manager, ldap-selfservice-password-changer, raybeam and simple-ldap-go carried the same stale lines in October 2026.",
+    "postUpdateOptions": [
+      "gomodTidy"
+    ]
+  },
   "vulnerabilityAlerts": {
     "enabled": true,
     "labels": [
