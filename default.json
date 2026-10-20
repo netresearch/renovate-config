@@ -50,6 +50,12 @@
       "matchPackageNames": ["phpunit/phpunit", "saschaegerer/phpstan-typo3"],
       "matchUpdateTypes": ["major"],
       "dependencyDashboardApproval": true
+    },
+    {
+      "description": "Guzzle majors move as one stack. guzzlehttp/oauth-subscriber 0.9.6 requires guzzle ^7.15.5 and 1.0.1 requires guzzle ^8.1 with psr7 ^3.1 and promises ^3.0.2, so neither major resolves on its own. Split into one pull request per package, timetracker#812 (guzzle 8) and #813 (oauth-subscriber 1) both failed composer.lock resolution and only a hand-made combined update (#836) could land them. One group gives Renovate a single composer update over every guzzlehttp/* major at once.",
+      "matchPackageNames": ["guzzlehttp/**"],
+      "matchUpdateTypes": ["major"],
+      "groupName": "guzzle major"
     }
   ]
 }
