@@ -10,6 +10,7 @@ Org-wide Renovate shared configuration preset for Netresearch.
 - **TYPO3 majors need approval**: A major update to a `typo3/cms-*` package or to `typo3/testing-framework` opens no pull request. It is listed on the repository's dependency dashboard and starts only when someone ticks it there, because widening the supported core range is a framework-support decision rather than a dependency update. Patches and minors inside the supported majors, and vulnerability alerts, are unaffected.
 - **Go modules are tidied**: Renovate runs `go mod tidy` after each Go module update (`gomod.postUpdateOptions: ["gomodTidy"]`), so an update pull request no longer leaves the previous version's checksums in `go.sum` for a `go mod tidy` pre-commit check to refuse. `postUpdateOptions` merges, so a repository that sets its own list keeps this entry.
 - **Framework-pinned tooling majors need approval**: A major update to `phpunit/phpunit` or `saschaegerer/phpstan-typo3` is gated the same way, because the framework decides which version can run — in a TYPO3 extension `typo3/testing-framework` pins PHPUnit, and each phpstan-typo3 major targets one TYPO3 major, so such an update is part of the same support decision as the core range.
+- **Guzzle majors are grouped**: Major updates of `guzzlehttp/*` packages arrive in one pull request, because the packages require each other's majors — `guzzlehttp/oauth-subscriber` 1.x needs Guzzle 8, 0.9.x needs Guzzle 7 — and an update of one alone cannot resolve `composer.lock`.
 
 ## Usage
 
