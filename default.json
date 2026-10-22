@@ -35,6 +35,12 @@
       "automerge": true
     },
     {
+      "description": "A Docker digest update has no release age to wait for. Renovate takes the age from the tag, and a tag such as php:8.5-alpine is pushed again whenever the publisher rebuilds it - php:8.5-alpine and composer:2 were both pushed on 2026-10-22 between 01:00 and 03:15 UTC - so the age measures the last rebuild, not a release. Where the registry returns no timestamp at all, minimumReleaseAgeBehaviour timestamp-required holds the update for good. Either way internalChecksFilter strict drops it from the branch: netresearch/phpbu-docker received no digest of its php base image after 2026-07-13, while its dependency dashboard listed the update. The digest still names the same tag the repository already chose, so this rule lifts the age only for digest updates; new versions keep the stabilityDays above.",
+      "matchDatasources": ["docker"],
+      "matchUpdateTypes": ["digest"],
+      "minimumReleaseAge": null
+    },
+    {
       "description": "Mark what a human has to look at, so machinery downstream can tell it apart. A major can break callers; a replacement swaps the dependency for a differently named successor, so the identity of what we depend on changes. Neither is covered by the automerge rule above, but that is a decision only Renovate knows about: nothing on the pull request says which update type it carries, and the auto-merge workflow in netresearch/.github consequently merged them anyway, overriding this policy. The label makes the distinction visible to anything that reads the pull request.",
       "matchUpdateTypes": ["major", "replacement"],
       "addLabels": ["deps-no-automerge"]
