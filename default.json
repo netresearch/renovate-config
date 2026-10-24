@@ -17,6 +17,12 @@
       "gomodTidy"
     ]
   },
+  "pep621": {
+    "description": "Renovate's pep621 manager tracks only the dependencies a pyproject.toml declares, so a transitive pin in uv.lock is never raised and lockFileMaintenance, which would refresh it, is off by default. In netresearch/t3x-nr-llm certifi, filelock and setuptools each stayed on a version an advisory lists until the lock was re-run by hand, and the Renovate run after the four filelock/setuptools alerts of October 2026 opened no pull request. agent-rules-skill and coding_agent_cli_toolset carry uv.lock files with the same gap. Weekly lock maintenance runs uv lock --upgrade, inside the constraints pyproject.toml sets.",
+    "lockFileMaintenance": {
+      "enabled": true
+    }
+  },
   "vulnerabilityAlerts": {
     "enabled": true,
     "labels": [
