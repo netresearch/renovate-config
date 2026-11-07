@@ -36,7 +36,7 @@
       "allowedVersions": "!/^(1\\.14\\.1|0\\.30\\.4)$/"
     },
     {
-      "description": "Automerge everything that does not change what we depend on. lockFileMaintenance only refreshes transitive pins inside the existing constraints, and a rollback returns to a version that already ran here, usually because the newer one was withdrawn - holding either back helps nobody. stabilityDays and internalChecksFilter above still apply, so nothing merges before it has aged and its checks are green.",
+      "description": "Automerge everything that does not change what we depend on. lockFileMaintenance only refreshes transitive pins inside the existing constraints, and a rollback returns to a version that already ran here, usually because the newer one was withdrawn - holding either back helps nobody. stabilityDays and internalChecksFilter above still apply, so nothing merges before it has aged and its checks are green; the pep621 lock-file-maintenance rule below lifts the age for that one case.",
       "matchUpdateTypes": ["patch", "minor", "pin", "pinDigest", "digest", "bump", "lockFileMaintenance", "rollback"],
       "automerge": true
     },
@@ -44,6 +44,12 @@
       "description": "A Docker digest update has no release age to wait for. Renovate takes the age from the tag, and a tag such as php:8.5-alpine is pushed again whenever the publisher rebuilds it - php:8.5-alpine and composer:2 were both pushed on 2026-10-22 between 01:00 and 03:15 UTC - so the age measures the last rebuild, not a release. Where the registry returns no timestamp at all, minimumReleaseAgeBehaviour timestamp-required holds the update for good. Either way internalChecksFilter strict drops it from the branch: netresearch/phpbu-docker received no digest of its php base image after 2026-07-13, while its dependency dashboard listed the update. The digest still names the same tag the repository already chose, so this rule lifts the age only for digest updates; new versions keep the stabilityDays above.",
       "matchDatasources": ["docker"],
       "matchUpdateTypes": ["digest"],
+      "minimumReleaseAge": null
+    },
+    {
+      "description": "pep621 lock-file maintenance has no release age to wait for. Renovate deletes the lock file and lets uv re-lock it, so the update carries no release timestamp, and minimumReleaseAgeBehaviour timestamp-required (the default since Renovate 42) keeps renovate/stability-days pending for good while stabilityDays above is set. Renovate never merges such a pull request, and netresearch/.github's auto-merge-deps.yml counts the pending status as a check that has not finished. Every open lock-file-maintenance pull request in the org was held this way on 2026-11-07: netresearch/pagerangers-skill#54 since 2026-08-08, netresearch/t3x-nr-llm#1197 since 2026-10-31, netresearch/coding_agent_cli_toolset#191 and netresearch/jira-to-openproject#332 since 2026-11-02, all of them uv.lock refreshes. Renovate's own security:minimumReleaseAge presets set minimumReleaseAge to null for lockFileMaintenance for the same reason. The refreshed versions stay inside the constraints pyproject.toml sets and still have to pass the repository's checks; they do not wait three days.",
+      "matchManagers": ["pep621"],
+      "matchUpdateTypes": ["lockFileMaintenance"],
       "minimumReleaseAge": null
     },
     {
