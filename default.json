@@ -47,6 +47,15 @@
       "minimumReleaseAge": null
     },
     {
+      "description": "A new version of an image from a registry other than Docker Hub never ages. Renovate's docker datasource takes release timestamps only from Docker Hub (tag_last_pushed), so for these registries every new tag has none, and minimumReleaseAgeBehaviour timestamp-required (the default since Renovate 42) holds it for good while stabilityDays above is set. netresearch/moodle-docker listed ghcr.io/netresearch/ofelia 1.1.0 and ghcr.io/php/pie 1.5.5 under Pending Status Checks for ten and thirteen days until they were raised by hand in netresearch/moodle-docker#112. Such an update is now raised without the age, but a human takes the place of the three days: it does not automerge and carries the label the auto-merge workflow in netresearch/.github skips. Digest updates keep the rule above.",
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["ghcr.io/**", "quay.io/**", "gcr.io/**", "mcr.microsoft.com/**", "registry.k8s.io/**", "public.ecr.aws/**"],
+      "matchUpdateTypes": ["major", "minor", "patch"],
+      "minimumReleaseAgeBehaviour": "timestamp-optional",
+      "automerge": false,
+      "addLabels": ["deps-no-automerge"]
+    },
+    {
       "description": "pep621 lock-file maintenance has no release age to wait for. Renovate deletes the lock file and lets uv re-lock it, so the update carries no release timestamp, and minimumReleaseAgeBehaviour timestamp-required (the default since Renovate 42) keeps renovate/stability-days pending for good while stabilityDays above is set. Renovate never merges such a pull request, and netresearch/.github's auto-merge-deps.yml counts the pending status as a check that has not finished. Every open lock-file-maintenance pull request in the org was held this way on 2026-11-07: netresearch/pagerangers-skill#54 since 2026-08-08, netresearch/t3x-nr-llm#1197 since 2026-10-31, netresearch/coding_agent_cli_toolset#191 and netresearch/jira-to-openproject#332 since 2026-11-02, all of them uv.lock refreshes. Renovate's own security:minimumReleaseAge presets set minimumReleaseAge to null for lockFileMaintenance for the same reason. The refreshed versions stay inside the constraints pyproject.toml sets and still have to pass the repository's checks; they do not wait three days.",
       "matchManagers": ["pep621"],
       "matchUpdateTypes": ["lockFileMaintenance"],
