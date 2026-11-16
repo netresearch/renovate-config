@@ -83,6 +83,13 @@
       "matchPackageNames": ["guzzlehttp/**"],
       "matchUpdateTypes": ["major"],
       "groupName": "guzzle major"
+    },
+    {
+      "description": "Digest updates are grouped into one pull request per repository, which Renovate creates only on Monday before 05:00.A digest names the same tag the repository already chose, and it moves whenever the publisher rebuilds that tag (php:8.5-cli, alpine:3.x) or re-points a major action tag (actions/checkout v7). One pull request per rebuild per repository put a stream of automerged pull requests across the org that nobody reviews, so batching them loses nothing. Security fixes are unaffected: vulnerabilityAlerts ignore this schedule.",
+      "matchUpdateTypes": ["digest", "pinDigest"],
+      "groupName": "digest updates",
+      "groupSlug": "digest-updates",
+      "schedule": ["* 0-4 * * 1"]
     }
   ]
 }
